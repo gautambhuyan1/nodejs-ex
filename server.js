@@ -116,6 +116,9 @@ app.get('/interests', function(req, res) {
         res.json(data);
     }
         
+    if (!db) {
+      initDb(function(err){});
+    }
     dbapp.getInterests(db, response);
 });
     
@@ -126,6 +129,9 @@ app.get('/activities/interest/:interest/lat/:lat/lng/:lng', function(req, res) {
     var response = function(data) {
         res.json(data);
     }
+    if (!db) {
+      initDb(function(err){});
+    }
     dbapp.getActivities(db, interest, lat, lng, response);
 });
     
@@ -135,11 +141,17 @@ app.get('/messages/activity/:activity', function(req, res) {
     var response = function(data) {
         res.json(data);
     }
+    if (!db) {
+      initDb(function(err){});
+    }
     dbapp.getMessages(db, activity, response);
 });
     
 app.post('/interest', function(req, res) {
     var interest = req.body.interest;
+    if (!db) {
+      initDb(function(err){});
+    }
     dbapp.addInterest(db, interest);
     console.log({interest:interest});
     res.json({done:true});
@@ -151,6 +163,9 @@ app.post('/activity', function(req, res) {
         lng = req.body.lng,
         activity = req.body.activity;
     console.log({interest:interest, lat:lat, lng:lng});
+    if (!db) {
+      initDb(function(err){});
+    }
     dbapp.createActivity(db, interest, activity, lat, lng);
     res.json({done:true});
 });
