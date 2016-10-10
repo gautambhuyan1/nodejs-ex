@@ -56,6 +56,11 @@ var initDb = function(callback) {
     dbDetails.url = mongoURLLabel;
     dbDetails.type = 'MongoDB';
 
+    db.createCollection("users", {strict: true});
+    db.createCollection("interests", {strict: true});
+    db.createCollection("activities", {strict: true});
+    db.createCollection("messages", {strict: true});
+
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
