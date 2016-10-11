@@ -40,6 +40,7 @@ var db = null,
     dbDetails = new Object();
 
 var initDb = function(callback) {
+console.log("InitDB called"+mongoURL);
   if (mongoURL == null) return;
 
   var mongodb = require('mongodb');
@@ -47,11 +48,14 @@ var initDb = function(callback) {
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
+console.log("InitDB return"+mongoURL);
       callback(err);
       return;
     }
 
+console.log("InitDB return"+conn);
     db = conn;
+    console.log("initDb "+ db);
     dbDetails.databaseName = db.databaseName;
     dbDetails.url = mongoURLLabel;
     dbDetails.type = 'MongoDB';
@@ -115,7 +119,9 @@ app.get('/interests', function(req, res) {
     var response = function(data) {
         res.json(data);
     }
+    initDb();
         
+    console.log("GetInterests"+db);
     if (!db) {
       initDb(function(err){});
     }
