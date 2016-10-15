@@ -188,12 +188,8 @@ app.post('/message', function(req, res) {
     
 app.use(function(req, res, next) {
     res.writeHead(200, {'Content-type' : 'text/html'});
-    res.write("<h1> Hello world <\h1>");
+    res.end("<h1>Unsupported function<\h1>");
     next();
-});
-
-app.use(function(req, res) {
-    res.end("<h2> Bye bye world<\h2>");
 });
 
 app.listen(port, ip);
