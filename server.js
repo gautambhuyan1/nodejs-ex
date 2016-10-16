@@ -33,17 +33,14 @@ if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
     // Provide UI label that excludes user id and pw
     mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
     mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
-
-
   }
 }
-    //mongoURL = 'mongodb://'+process.env.MONGODB_USER+':'+process.env.MONGODB_PASSWORD+'@'+process.env.MONGODB_SERVICE_HOST+':'+process.env.MONGODB_SERVICE_PORT+'/'+process.env.MONGODB_DATABASE;
 
 var db = null,
     dbDetails = new Object();
 
 var initDb = function(callback) {
-console.log("InitDB called"+mongoURL);
+//console.log("InitDB called"+mongoURL);
   if (mongoURL == null) return;
 
   var mongodb = require('mongodb');
@@ -51,7 +48,6 @@ console.log("InitDB called"+mongoURL);
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
-console.log("InitDB return"+mongoURL);
       callback(err);
       return;
     }
@@ -183,6 +179,11 @@ app.post('/message', function(req, res) {
     var activity = req.body.activity,
         message = req.body.message;
     console.log({activity:activity, message:message});
+    if (!db) {
+      initDb(function(err){});
+    }
+    dbapp.createMessage(db, activity, message);
+    
     res.json({done:true});
 });
     

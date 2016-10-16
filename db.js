@@ -81,15 +81,40 @@ exports.createActivity = function(myDb, myInterest, myActivity, myLat, myLng) {
 }
 
 // Get the messages associated with an activity
-exports.getMessages = function(myDb, activityId, phone, callback) {
-    console.log("@getMessages()"+activityId+" "+phone);
-    callback(0);
-
+exports.getMessages = function(myDb, myActivityId, callback) {
+    console.log("@getMessages()"+myActivityId);
+    var response;
+    var messages = [];
+    myDb.collection('messages', function(err, collection){
+        var query = {"activity": myActivityId};
+ 
+        //console.log(query);
+        var messageCursor = collection.find(query);
+        messageCursor.toArray(function(err, docArr){
+            for(doc in docArr) {
+                messages.push({"message":docArr[doc].message});
+                //console.log(messages);
+                //console.log({"message":docArr[doc].message});
+                //console.log("iteration ", doc);
+            }
+            //console.log(docArr);
+            //console.log(messages);
+            response = {activityid: myActivityId, messages: messages};
+            //console.log("Response:"+response);
+            callback(response);
+        });
+    });
 }
 
 // Store the messages associated with an activity
-exports.createMessage = function(myDb, activityId, msg, phone) {
-    console.log("@getMessages()"+activityId+" "+msg+" "+phone);
-
+exports.createMessage = function(myDb, activityId, msg) {
+    console.log("@createMessages()"+activityId+" "+msg);
+    var messageToAdd = {activity: activityId, message:msg};
+    var options = {w:1, wtimeout: 5000, journal:true, fsync:false};
+    myDb.collection('messages', function(err, collection) {
+        collection.insert(messageToAdd, options, function(err, results) {
+            console.log(results);
+        });
+    });
 }
 
